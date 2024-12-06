@@ -79,7 +79,18 @@ function ShoppingCartProvider({ children }) {
   useEffect(() => {
     setLoading(true);
     fetchListOfProducts();
-    setCartItems(JSON.parse(localStorage.getItem("cartItems") || []));
+
+    const storedCartItems = localStorage.getItem("cartItems");
+    if (storedCartItems) {
+      try {
+        setCartItems(JSON.parse(storedCartItems));
+      } catch (error) {
+        console.error("Failed to parse cartItems from localStorage:", error);
+        setCartItems([]); // Reset to an empty cart if parsing fails
+      }
+    } else {
+      setCartItems([]);
+    }
   }, []);
 
   console.log({ cartItems });
